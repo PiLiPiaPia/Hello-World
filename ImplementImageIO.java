@@ -5,7 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.awt.image.BufferedImage;  
 import java.awt.image.ImageProducer;  
-import java.awt.image.MemoryImageSource;  
+import java.awt.image.MemoryImageSource; 
+import java.awt.Graphics;
 import java.io.File;  
 import java.io.FileInputStream;  
 import java.io.FileOutputStream;  
@@ -20,14 +21,6 @@ public class ImplementImageIO implements IImageIO
 
 	public Imgae myRead(String filePath)
 	{
-		FileInputStream file =  new FileInputStream(filePath);
-		if(!file.exists())
-		{
-			//throw IOException;
-		}
-
-
-
 		try{  
             FileInputStream file = new FileInputStream(filePath);  
             byte header[] = new byte[14];  
@@ -95,10 +88,15 @@ public class ImplementImageIO implements IImageIO
 
 	public Image myWrite(Image img,String filePath)
 	{
-		BufferedImage bufImage = (BufferedImage)img;
+		if(img instanceof BufferedImage)
+			return (BufferedImage)img;
 		try
 		{
 			FileOutputStream file = new FileOutputStream(filePath);
+			BufferedImage bufImage = new BufferedImage(img.getWidth(null),img.getHeight(null),BufferedImage.TYPE_INT_RGB);
+ 			Graphics g = bufImage.createGraphics();
+			g.drawImage(img,0,0,null);
+			g.dispose();
 			ImageIO.write(bufImage,"bmp",file);
 			file.close();
 			return img;
@@ -109,4 +107,3 @@ public class ImplementImageIO implements IImageIO
 		}
 		return (Image)null;	
 	}
-}

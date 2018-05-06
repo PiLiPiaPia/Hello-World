@@ -20,14 +20,21 @@ import javax.swing.JOptionPane;
  * The implementation of this class is testable on the AP CS A and AB exams.
  */
 public class MazeBug extends Bug {
+	//下一个位置
 	public Location next;
+	//上一个位置
 	public Location last;
+	//记录当前是否已经找到出口
 	public boolean isEnd = false;
+	//存放到达当前所在位置所经过的一系列位置
 	public Stack<Location> crossLocation = new Stack<Location>();
+	//计数，记录走的总步数
 	public Integer stepCount = 0;
-	public Map<String,Boolean> locationVisitState = new HashMap<String,Boolean>();
-	boolean hasShown = false;//final message has been shown
+	//final message has been shown
+	boolean hasShown = false;
+	//MazeBug的有效移动方向个数
 	private final int numOfValidDirection = 4;
+	//MazeBug每次转向所转的角度
 	private final int degreeOffset = 90;
 	int countDirection[] = new int[numOfValidDirection];
 	
@@ -39,7 +46,9 @@ public class MazeBug extends Bug {
 	 */
 	public MazeBug() {
 		setColor(Color.GREEN);
-		last = new Location(0, 0);
+		last =null;
+		next = null;
+		//初始化各个方向的计数
 		for(int i = 0;i < numOfValidDirection;++i) {
 			countDirection[i] = 0;
 		}
@@ -62,8 +71,10 @@ public class MazeBug extends Bug {
 			//increase step count when move 
 			stepCount++;
 		} 
+		//无法继续前进只能后退的情况
 		else {
 			Grid<Actor> gr = getGrid();
+			//后退一步
 			last = crossLocation.peek();
 			crossLocation.pop();
 			Location backward = crossLocation.peek();
@@ -107,7 +118,11 @@ public class MazeBug extends Bug {
 		return valid;
 	}
 
-	
+	/**
+	 * Move to the next location if canMove
+	 *            
+	 * 
+	 */
 	public void move() {
 		Grid<Actor> gr = getGrid();
 		if (gr == null)
@@ -138,7 +153,6 @@ public class MazeBug extends Bug {
         if (gr == null)
             return false;
         Location curLoc = getLocation();
-        Location next = curLoc.getAdjacentLocation(getDirection());
         ArrayList<Location> availableLocations = getValid(curLoc);
         ArrayList<Integer> bestLocationList = new ArrayList<Integer>();
         if(availableLocations == null || availableLocations.size() == 0) {
@@ -155,7 +169,7 @@ public class MazeBug extends Bug {
         	int selectIndex = (int)(Math.random() * bestLocationList.size());
         	next = (bestLocationList.size() == 0)?availableLocations.get(0):availableLocations.get(bestLocationList.get(selectIndex));
         	countDirection[curLoc.getDirectionToward(next)/degreeOffset]++;
-        	System.out.println(bestLocationList.toString());
+        	//System.out.println(bestLocationList.toString());
         	return true;
         }
         // not ok to move onto any other actor

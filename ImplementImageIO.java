@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.awt.image.BufferedImage;  
 import java.awt.image.ImageProducer;  
-import java.awt.image.MemoryImageSource; 
+import java.awt.image.MemoryImageSource;  
 import java.awt.Graphics;
 import java.io.File;  
 import java.io.FileInputStream;  
@@ -19,7 +19,7 @@ public class ImplementImageIO implements IImageIO
 {
 	Image img;
 
-	public Imgae myRead(String filePath)
+	public Image myRead(String filePath)
 	{
 		try{  
             FileInputStream file = new FileInputStream(filePath);  
@@ -51,7 +51,7 @@ public class ImplementImageIO implements IImageIO
             if (bitDepth == 24){  
                   
                 //由于像素使用的字节若不是4的倍数，则会自动扩大，由此产生空白。因此我们需要在一开始计算出空白的大小  
-				int numOfEmptyByte = bmpSize / height - 3*width;  
+		int numOfEmptyByte = bmpSize / height - 3*width;  
 
                 //记录当前像素数据的起始位置  
                 int index = 0;  
@@ -59,8 +59,8 @@ public class ImplementImageIO implements IImageIO
                 int bmpArray[] = new int [width * height];  
                 byte bmpBuffer[] = new byte[bmpSize];  
                 file.read(bmpBuffer, 0, bmpSize);  
-                  
-                for(int i = 0; i < height; i++ ){  
+                //
+                for(int i = height - 1; i >= 0; i-- ){  
                       
                     for( int j = 0; j < width; j++ ){  
                         //第一个0xff << 24表示透明度  
@@ -107,3 +107,4 @@ public class ImplementImageIO implements IImageIO
 		}
 		return (Image)null;	
 	}
+}
